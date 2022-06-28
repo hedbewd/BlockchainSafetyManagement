@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import SiteName from './SiteName';
+import TransactionAdd from './TransactionAdd';
+import TransactionShow from './TransactionShow';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <SiteName />
+      <input type="text" placeholder="Type"></input>
+      <br></br>
+      <input type="text" placeholder="Name"></input>
+      <br></br>
+      <input type="text" placeholder="Time"></input>
+      <br></br>
+      <input type="text" placeholder="IPFS Hash"></input>
+      <br></br>
+      <input type="text" placeholder="Registrant"></input>
+      <br></br>
+      <input type="text" placeholder="Responsible Manager"></input>
+      <br></br>
+      <input type="text" placeholder="File Type"></input>
+      <br></br>
+      <input type="text" placeholder="File Description"></input>
+      <br></br>
+      <TransactionAdd>트랜잭션 추가</TransactionAdd>
+      <TransactionShow>트랜잭션 보기</TransactionShow>
     </div>
   );
 }
