@@ -19,8 +19,6 @@ function TransactionInput() {
             <br></br>
             <input type="text" placeholder="File Description"></input>
             <br></br>
-            <input type="file" onChange={(e) => console.log(e.target.files[0])}></input>
-            <br></br>
         </div>
     );
 }
