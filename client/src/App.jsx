@@ -11,7 +11,16 @@ export default function App() {
   const [web3, setWeb3] = useState("");
   const [account, setAccount] = useState("");
   const [transactionInstance, setTransactionInstance] = useState("");
+
   const [ttype, setTtype] = useState("");
+  const [name, setName] = useState("");
+  const [time, setTime] = useState("");
+  const [ipfsHash, setIpfsHash] = useState("");
+  const [regsitrant, setRegsitrant] = useState("");
+  const [responsibleManager, setResponsibleManager] = useState("");
+  const [fileType, setFileType] = useState("");
+  const [fileDescription, setFileDescription] = useState("");
+  const [transactionView, setTransactionView] = useState("");
   
   useEffect(() => {
     async function componentWillMount(e) {
@@ -40,7 +49,7 @@ export default function App() {
     console.log(web3);
     console.log(account);
     console.log(transactionInstance);
-    await transactionInstance.sendTrans({
+    await transactionInstance.sendTrans(ttype, name, ipfsHash, regsitrant, responsibleManager, fileType, fileDescription,{
       from: account,
       //value: e.web3.utils.toWei('10', "ether"),
       gas: 1000000
@@ -50,32 +59,28 @@ export default function App() {
 
   const updateAllTransactions = async (e) => {
     await transactionInstance.getAllTransactions().then(result => {
-      setTtype(result);
-      console.log(ttype);
+      setTransactionView(result);
+      console.log(transactionView[1]);
     })
   }
 
 
   return (
     <div>
-      <input type="text" placeholder="Type"></input>
+      <input type="text" placeholder="Type" onChange = {(event) => setTtype(event.target.value)}></input>
       <br></br>
-      <input type="text" placeholder="Name"></input>
+      <input type="text" placeholder="Name" onChange = {(event) => setName(event.target.value)}></input>
       <br></br>
-      <input type="text" placeholder="Time"></input>
+      <input type="text" placeholder="Registrant" onChange = {(event) => setRegsitrant(event.target.value)}></input>
       <br></br>
-      <input type="text" placeholder="IPFS Hash"></input>
+      <input type="text" placeholder="Responsible Manager" onChange = {(event) => setResponsibleManager(event.target.value)}></input>
       <br></br>
-      <input type="text" placeholder="Registrant"></input>
+      <input type="text" placeholder="File Type" onChange = {(event) => setFileType(event.target.value)}></input>
       <br></br>
-      <input type="text" placeholder="Responsible Manager"></input>
-      <br></br>
-      <input type="text" placeholder="File Type"></input>
-      <br></br>
-      <input type="text" placeholder="File Description"></input>
+      <input type="text" placeholder="File Description" onChange = {(event) => setFileDescription(event.target.value)}></input>
       <br></br>
       
-      <FileUpload setUrl={setFileUrl} />
+      <FileUpload setUrl={setFileUrl} setIpfs={setIpfsHash} />
       FileUrl :{" "}
       <a href={fileUrl} target="_blank" rel="noopener noreferrer">
         {fileUrl}
@@ -95,7 +100,7 @@ export default function App() {
 
       <p>all transactions:</p>
       <br></br>
-      <p>{ttype}</p>
+      <p>{transactionView}</p>
     </div>
   )
 }
