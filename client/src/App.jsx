@@ -12,16 +12,24 @@ export default function App() {
   const [account, setAccount] = useState("");
   const [transactionInstance, setTransactionInstance] = useState("");
 
-  const [ttype, setTtype] = useState("");
+  const [category, setCategory] = useState("");
   const [name, setName] = useState("");
-  const [time, setTime] = useState("");
   const [ipfsHash, setIpfsHash] = useState("");
-  const [regsitrant, setRegsitrant] = useState("");
+  const [registrant, setRegsitrant] = useState("");
   const [responsibleManager, setResponsibleManager] = useState("");
   const [fileType, setFileType] = useState("");
   const [fileDescription, setFileDescription] = useState("");
-  const [transactionView, setTransactionView] = useState("");
-  
+  const [transactionCnt, setTransactionCnt] = useState("");
+
+  const [time, setTime] = useState("");
+  const [ipfsHash_, setIpfsHash_] = useState("");
+  const [category_, setCategory_] = useState("");
+  const [name_, setName_] = useState("");
+  const [registrant_, setRegsitrant_] = useState("");
+  const [responsibleManager_, setResponsibleManager_] = useState("");
+  const [fileType_, setFileType_] = useState("");
+  const [fileDescription_, setFileDescription_] = useState("");
+
   useEffect(() => {
     async function componentWillMount(e) {
       const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -46,10 +54,10 @@ export default function App() {
   }, []);
 
   const sendTransaction = async (e) => {
-    console.log(web3);
-    console.log(account);
-    console.log(transactionInstance);
-    await transactionInstance.sendTrans(ttype, name, ipfsHash, regsitrant, responsibleManager, fileType, fileDescription,{
+    // console.log(web3);
+    // console.log(account);
+    // console.log(transactionInstance);
+    await transactionInstance.sendTrans(category, name, ipfsHash, registrant, responsibleManager, fileType, fileDescription,{
       from: account,
       //value: e.web3.utils.toWei('10', "ether"),
       gas: 1000000
@@ -59,15 +67,25 @@ export default function App() {
 
   const updateAllTransactions = async (e) => {
     await transactionInstance.getAllTransactions().then(result => {
-      setTransactionView(result);
-      console.log(transactionView[1]);
+      setCategory_(result.category);
+      setName_(result.name);
+      setTime(result.timestamp);
+      setIpfsHash_(result.ipfs_hash);
+      setRegsitrant_(result.registrant);
+      setResponsibleManager_(result.responsible_manager);
+      setFileType_(result.file_type);
+      setFileDescription_(result.file_description);
+      setTransactionCnt(transactionInstance.cntTransactions());
+
+      let events = transactionInstance.getPastEvents('handleTransaction', {fromBlock:0, toBlock:'latest'});
+      console.log(events);
     })
   }
 
 
   return (
     <div>
-      <input type="text" placeholder="Type" onChange = {(event) => setTtype(event.target.value)}></input>
+      <input type="text" placeholder="Type" onChange = {(event) => setCategory(event.target.value)}></input>
       <br></br>
       <input type="text" placeholder="Name" onChange = {(event) => setName(event.target.value)}></input>
       <br></br>
@@ -100,14 +118,17 @@ export default function App() {
 
       <p>all transactions:</p>
       <br></br>
-      <p>{transactionView}</p>
+      <p>Category: {category_}</p>
+      <p>File Name: {name_}</p>
+      <p>Time: {time}</p>
+      <p>IPFS Hash: {ipfsHash_}</p>
+      <p>Registrant: {registrant_}</p>
+      <p>Responsible Manager: {responsibleManager_}</p>
+      <p>File Type: {fileType_}</p>
+      <p>File Description: {fileDescription_}</p>
     </div>
   )
 }
-
-
-
-
 
 
 
