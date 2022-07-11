@@ -11,6 +11,7 @@ export default function App() {
   const [web3, setWeb3] = useState("");
   const [account, setAccount] = useState("");
   const [transactionInstance, setTransactionInstance] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [category, setCategory] = useState("");
   const [name, setName] = useState("");
@@ -30,6 +31,10 @@ export default function App() {
   const [fileType_, setFileType_] = useState("");
   const [fileDescription_, setFileDescription_] = useState("");
 
+
+
+  
+
   useEffect(() => {
     async function componentWillMount(e) {
       const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -45,13 +50,48 @@ export default function App() {
           transaction.deployed().then(instance => {
             setTransactionInstance(instance);
             setAccount(accounts[0]);
-            //this.updateAllTransactions();
+            setLoading(true);
           })
         }
       })
+      
     }
+
     componentWillMount();
+    // setTimeout(() => {  console.log("World!"); }, 1000);
+    // updateAllTransactions();
+
+    
+
   }, []);
+
+
+  useEffect(() => {
+
+    async function updateAllTransactions(e){
+      let events = await transactionInstance.getPastEvents('handleTransaction', {fromBlock:0, toBlock:'latest'});
+      for(let i=0; i<events.length;i+=1){
+        const record = {};
+        setCategory_(events[i].returnValues.category.toString());
+        setName_(events[i].returnValues.name.toString());
+        setTime(events[i].returnValues.timestamp);
+        setIpfsHash_(events[i].returnValues.ipfs_hash.toString());
+        setRegsitrant_(events[i].returnValues.registrant.toString());
+        setResponsibleManager_(events[i].returnValues.responsible_manager);
+        setFileType_(events[i].returnValues.file_type.toString());
+        setFileDescription_(events[i].returnValues.file_description.toString());
+        setTransactionCnt(transactionInstance.cntTransactions());
+  
+      }
+      console.log(events.length);
+      console.log(events);
+  
+    }
+
+    if (loading == true) updateAllTransactions();
+
+}, [loading]);
+
 
   const sendTransaction = async (e) => {
     // console.log(web3);
@@ -62,25 +102,12 @@ export default function App() {
       //value: e.web3.utils.toWei('10', "ether"),
       gas: 1000000
     })
-    //this.updateAllTransactions();
+    
+    let events = await transactionInstance.getPastEvents('handleTransaction', {fromBlock: 0, toBlock:'latest'});
+    console.log(events[events.length-1].transactionHash)
   }
 
-  const updateAllTransactions = async (e) => {
-    await transactionInstance.getAllTransactions().then(result => {
-      setCategory_(result.category);
-      setName_(result.name);
-      setTime(result.timestamp);
-      setIpfsHash_(result.ipfs_hash);
-      setRegsitrant_(result.registrant);
-      setResponsibleManager_(result.responsible_manager);
-      setFileType_(result.file_type);
-      setFileDescription_(result.file_description);
-      setTransactionCnt(transactionInstance.cntTransactions());
 
-      let events = transactionInstance.getPastEvents('handleTransaction', {fromBlock:0, toBlock:'latest'});
-      console.log(events);
-    })
-  }
 
 
   return (
@@ -111,9 +138,9 @@ export default function App() {
       <button onClick={sendTransaction}>
         트랜잭션 추가
       </button>
-      <button onClick={updateAllTransactions}>
+      {/* <button onClick={updateAllTransactions}>
         트랜잭션 보여주기
-      </button>
+      </button> */}
       <br></br>
 
       <p>all transactions:</p>
@@ -131,141 +158,3 @@ export default function App() {
 }
 
 
-
-
-
-
-
-// import React, { useEffect, useState, Component } from "react";
-// import {FileUpload} from './components/FileUpload';
-// import "./App.css";
-// import TransactionContract from "../src/contracts/Transaction.json"
-// import Web3 from 'web3';
-
-// const fileComponent = () => {
-//   const [fileUrl, setFileUrl] = useState("");
-
-//   return (
-//       <div>
-//         <FileUpload setUrl={setFileUrl} />
-//         FileUrl :{" "}
-//         <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-//           {fileUrl}
-//         </a>
-//         <br></br>
-//       </div>
-//   )
-// }
-
-
-
-
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.state = {
-//       web3: null,
-//       account: null,
-//       transactionInstance: null,
-
-//       ttype: null,
-//       name: null,
-//       timestamp: null,
-//       ipfs_hash: null,
-//       registrant: null,
-//       responsible_manager: null,
-//       file_type: null,
-//       file_description: null
-//     };
-//   }
-
-//   async componentWillMount() {
-//     const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-//     this.setState({
-//       web3: web3
-//     }, () => {
-//       this.instantiateContract();
-//     })
-//     console.log(web3)
-//   }
-
-//   async instantiateContract(){
-//     const contract = require("truffle-contract");
-//     const transaction = contract(TransactionContract);
-//     console.log(this.state.web3);
-//     transaction.setProvider(this.state.web3.currentProvider);
-
-//     this.state.web3.eth.getAccounts((error, accounts) => {
-//       if (!error){
-//         transaction.deployed().then(instance => {
-//           this.setState({transactionInstance: instance, account: accounts[0]});
-//           //this.updateAllTransactions();
-//         })
-//       }
-//     })
-//   }
-
-//   async sendTransaction() {
-//     await this.state.transactionInstance.sendTrans({
-//       from: this.state.account,
-//       value: this.state.web3.utils.toWei('10', "ether"),
-//       gas: 1000000
-//     })
-//     //this.updateAllTransactions();
-//   }
-
-// async updateAllTransactions() {
-//   await this.state.transactionInstance.getAllTransactions().then(result => {
-//     this.setState ({ttype: result})
-//     console.log(this.state.ttype);
-//   })
-// }
-
-//   render() {
-//     return (
-//       <div>
-//         <input type="text" placeholder="Type"></input>
-//         <br></br>
-//         <input type="text" placeholder="Name"></input>
-//         <br></br>
-//         <input type="text" placeholder="Time"></input>
-//         <br></br>
-//         <input type="text" placeholder="IPFS Hash"></input>
-//         <br></br>
-//         <input type="text" placeholder="Registrant"></input>
-//         <br></br>
-//         <input type="text" placeholder="Responsible Manager"></input>
-//         <br></br>
-//         <input type="text" placeholder="File Type"></input>
-//         <br></br>
-//         <input type="text" placeholder="File Description"></input>
-//         <br></br>
-        
-//         {/* <FileUpload setUrl='{setFileUrl}' />
-//         FileUrl :{" "}
-//         <a href={fileUrl} target="_blank" rel="noopener noreferrer">
-//           {fileUrl}
-//         </a>
-//         <br></br> */}
-
-//         <p>Your account: {this.state.account}</p>
-//         <br></br>
-
-//         <button onClick={() => this.sendTransaction()}>
-//           트랜잭션 추가
-//         </button>
-//         <button onClick={() => this.updateAllTransactions()}>
-//           트랜잭션 보여주기
-//         </button>
-//         <br></br>
-
-//         <p>all transactions:</p>
-//         <br></br>
-//         <p>{this.state.ttype}</p>
-//       </div>
-//     )
-//   }
-// }
-
-// export default App;
