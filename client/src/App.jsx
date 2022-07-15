@@ -3,7 +3,7 @@ import {FileUpload} from './components/FileUpload';
 import "./App.css";
 import TransactionContract from "../src/contracts/Transaction.json"
 import Web3 from 'web3';
-
+import moment from "moment";
 
 
 export default function App() {
@@ -70,14 +70,16 @@ export default function App() {
 
     async function updateAllTransactions(e){
       let events = await transactionInstance.getPastEvents('handleTransaction', {fromBlock:0, toBlock:'latest'});
-      for(let i=0; i<events.length;i+=1){
+      for(let i=0; i<events.length; i+=1){
         const record = {};
+        var time_ = moment.unix(events[i].returnValues.time);
+
         setCategory_(events[i].returnValues.category.toString());
         setName_(events[i].returnValues.name.toString());
-        setTime(events[i].returnValues.timestamp);
+        setTime(time_.toString());
         setIpfsHash_(events[i].returnValues.ipfs_hash.toString());
         setRegsitrant_(events[i].returnValues.registrant.toString());
-        setResponsibleManager_(events[i].returnValues.responsible_manager);
+        setResponsibleManager_(events[i].returnValues.responsible_manager.toString());
         setFileType_(events[i].returnValues.file_type.toString());
         setFileDescription_(events[i].returnValues.file_description.toString());
         setTransactionCnt(transactionInstance.cntTransactions());
@@ -156,5 +158,4 @@ export default function App() {
     </div>
   )
 }
-
 
