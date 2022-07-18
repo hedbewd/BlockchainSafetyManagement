@@ -32,9 +32,6 @@ export default function App() {
   const [fileDescription_, setFileDescription_] = useState("");
 
 
-
-  
-
   useEffect(() => {
     async function componentWillMount(e) {
       const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
