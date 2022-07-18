@@ -66,7 +66,7 @@ contract Transaction {
         string file_description;
     }
 
-    event handleTransaction(string category, string name, uint256 time, string ipfs_hash, string registrant, string mresponsible_manager, string file_type, string file_description);
+    event handleTransaction(string category, string name, uint256 time, string ipfs_hash, string registrant, string responsible_manager, string file_type, string file_description);
 
     //saves all the transactions of the account
     mapping (address=>transaction) transactionIndex;

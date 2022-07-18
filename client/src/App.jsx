@@ -3,6 +3,8 @@ import {FileUpload} from './components/FileUpload';
 import "./App.css";
 import TransactionContract from "../src/contracts/Transaction.json"
 import Web3 from 'web3';
+import moment from "moment";
+import Axios from 'axios';
 
 
 
@@ -11,6 +13,7 @@ export default function App() {
   const [web3, setWeb3] = useState("");
   const [account, setAccount] = useState("");
   const [transactionInstance, setTransactionInstance] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [category, setCategory] = useState("");
   const [name, setName] = useState("");
@@ -30,6 +33,22 @@ export default function App() {
   const [fileType_, setFileType_] = useState("");
   const [fileDescription_, setFileDescription_] = useState("");
 
+  const submitReview = ()=>{
+    Axios.post('http://localhost:3001/api/insert', {
+      category: category_,
+      name: name_,
+      time: time,
+      ipfsHash: ipfsHash_,
+      registrant: registrant_,
+      responsible: responsibleManager_,
+      filetype: fileType_,
+      filedes: fileDescription_
+    }).then(()=>{
+      alert('등록 완료!');
+    })
+  };
+
+
   useEffect(() => {
     async function componentWillMount(e) {
       const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -45,13 +64,51 @@ export default function App() {
           transaction.deployed().then(instance => {
             setTransactionInstance(instance);
             setAccount(accounts[0]);
-            //this.updateAllTransactions();
+            setLoadi
+            ng(true);
           })
         }
       })
+      
     }
+
     componentWillMount();
+    // setTimeout(() => {  console.log("World!"); }, 1000);
+    // updateAllTransactions();
+
+    
+
   }, []);
+
+
+  useEffect(() => {
+
+    async function updateAllTransactions(e){
+      let events = await transactionInstance.getPastEvents('handleTransaction', {fromBlock:0, toBlock:'latest'});
+      for(let i=0; i<events.length;i+=1){
+        const record = {};
+        var time_ = moment.unix(events[i].returnValues.time);
+
+        setCategory_(events[i].returnValues.category.toString());
+        setName_(events[i].returnValues.name.toString());
+        setTime(time_.toString());
+        setIpfsHash_(events[i].returnValues.ipfs_hash.toString());
+        setRegsitrant_(events[i].returnValues.registrant.toString());
+        setResponsibleManager_(events[i].returnValues.responsible_manager.toString());
+        setFileType_(events[i].returnValues.file_type.toString());
+        setFileDescription_(events[i].returnValues.file_description.toString());
+        setTransactionCnt(transactionInstance.cntTransactions());
+        console.log(events[i].returnValues);
+      }
+      console.log(events.length);
+      console.log(events);
+  
+    }
+
+    if (loading == true) updateAllTransactions();
+
+}, [loading]);
+
 
   const sendTransaction = async (e) => {
     // console.log(web3);
@@ -62,25 +119,15 @@ export default function App() {
       //value: e.web3.utils.toWei('10', "ether"),
       gas: 1000000
     })
+    
+    let events = await transactionInstance.getPastEvents('handleTransaction', {fromBlock: 0, toBlock:'latest'});
+    console.log(events[events.length-1].transactionHash)
     //this.updateAllTransactions();
+
+    submitReview();
   }
 
-  const updateAllTransactions = async (e) => {
-    await transactionInstance.getAllTransactions().then(result => {
-      setCategory_(result.category);
-      setName_(result.name);
-      setTime(result.timestamp);
-      setIpfsHash_(result.ipfs_hash);
-      setRegsitrant_(result.registrant);
-      setResponsibleManager_(result.responsible_manager);
-      setFileType_(result.file_type);
-      setFileDescription_(result.file_description);
-      setTransactionCnt(transactionInstance.cntTransactions());
 
-      let events = transactionInstance.getPastEvents('handleTransaction', {fromBlock:0, toBlock:'latest'});
-      console.log(events);
-    })
-  }
 
 
   return (
@@ -111,9 +158,9 @@ export default function App() {
       <button onClick={sendTransaction}>
         트랜잭션 추가
       </button>
-      <button onClick={updateAllTransactions}>
+      {/* <button onClick={updateAllTransactions}>
         트랜잭션 보여주기
-      </button>
+      </button> */}
       <br></br>
 
       <p>all transactions:</p>
