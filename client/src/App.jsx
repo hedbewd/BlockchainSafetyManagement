@@ -35,14 +35,14 @@ export default function App() {
 
   const submitReview = ()=>{
     Axios.post('http://localhost:3001/api/insert', {
-      category: category_,
-      name: name_,
+      category: category,
+      name: name,
       time: time,
-      ipfsHash: ipfsHash_,
-      registrant: registrant_,
-      responsible: responsibleManager_,
-      filetype: fileType_,
-      filedes: fileDescription_
+      ipfsHash: ipfsHash,
+      registrant: registrant,
+      responsible: responsibleManager,
+      filetype: fileType,
+      filedes: fileDescription
     }).then(()=>{
       alert('등록 완료!');
     })
