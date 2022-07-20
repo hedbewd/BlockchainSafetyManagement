@@ -5,6 +5,7 @@ import TransactionContract from "../src/contracts/Transaction.json"
 import Web3 from 'web3';
 import moment from "moment";
 import Axios from 'axios';
+import Login from './login';
 
 
 
@@ -131,6 +132,7 @@ export default function App() {
 
   return (
     <div>
+      <Login />
       <input type="text" placeholder="Type" onChange = {(event) => setCategory(event.target.value)}></input>
       <br></br>
       <input type="text" placeholder="Name" onChange = {(event) => setName(event.target.value)}></input>
