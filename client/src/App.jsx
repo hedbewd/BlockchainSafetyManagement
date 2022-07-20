@@ -38,12 +38,12 @@ export default function App() {
     Axios.post('http://localhost:3001/api/insert', {
       category: category_,
       name: name_,
-      time: time,
+      time: time_,
       ipfsHash: ipfsHash_,
       registrant: registrant_,
       responsible: responsibleManager_,
       filetype: fileType_,
-      filedes: fileDescription_
+      filedes: fileDescriptio_n
     }).then(()=>{
       alert('등록 완료!');
     })
