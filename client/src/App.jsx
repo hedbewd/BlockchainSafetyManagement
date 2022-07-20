@@ -70,13 +70,6 @@ export default function App() {
       })
       
     }
-
-    componentWillMount();
-    // setTimeout(() => {  console.log("World!"); }, 1000);
-    // updateAllTransactions();
-
-    
-
   }, []);
 
 
@@ -104,15 +97,15 @@ export default function App() {
   
     }
 
-    if (loading == true) updateAllTransactions();
+    if (loading === true) updateAllTransactions();
 
-}, [loading]);
+}, [loading, transactionInstance]);
 
 
   const sendTransaction = async (e) => {
-    // console.log(web3);
-    // console.log(account);
-    // console.log(transactionInstance);
+    console.log(web3);
+    console.log(account);
+    console.log(transactionInstance);
     await transactionInstance.sendTrans(category, name, ipfsHash, registrant, responsibleManager, fileType, fileDescription,{
       from: account,
       //value: e.web3.utils.toWei('10', "ether"),
