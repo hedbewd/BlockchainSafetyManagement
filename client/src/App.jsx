@@ -5,6 +5,7 @@ import TransactionContract from "../src/contracts/Transaction.json"
 import Web3 from 'web3';
 import moment from "moment";
 import Axios from 'axios';
+import Login from './login';
 
 
 
@@ -35,14 +36,14 @@ export default function App() {
 
   const submitReview = ()=>{
     Axios.post('http://localhost:3001/api/insert', {
-      category: category,
-      name: name,
+      category: category_,
+      name: name_,
       time: time,
-      ipfsHash: ipfsHash,
-      registrant: registrant,
-      responsible: responsibleManager,
-      filetype: fileType,
-      filedes: fileDescription
+      ipfsHash: ipfsHash_,
+      registrant: registrant_,
+      responsible: responsibleManager_,
+      filetype: fileType_,
+      filedes: fileDescription_
     }).then(()=>{
       alert('등록 완료!');
     })
@@ -70,6 +71,13 @@ export default function App() {
       })
       
     }
+
+    componentWillMount();
+    // setTimeout(() => {  console.log("World!"); }, 1000);
+    // updateAllTransactions();
+
+    
+
   }, []);
 
 
@@ -97,9 +105,9 @@ export default function App() {
   
     }
 
-    if (loading === true) updateAllTransactions();
+    if (loading == true) updateAllTransactions();
 
-}, [loading, transactionInstance]);
+}, [loading]);
 
 
   const sendTransaction = async (e) => {
@@ -124,6 +132,7 @@ export default function App() {
 
   return (
     <div>
+      <Login />
       <input type="text" placeholder="Type" onChange = {(event) => setCategory(event.target.value)}></input>
       <br></br>
       <input type="text" placeholder="Name" onChange = {(event) => setName(event.target.value)}></input>
