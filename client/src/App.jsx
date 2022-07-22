@@ -6,6 +6,7 @@ import Web3 from 'web3';
 import moment from "moment";
 import Axios from 'axios';
 import Login from './login';
+import Signup from './signup';
 
 
 
@@ -36,14 +37,14 @@ export default function App() {
 
   const submitReview = ()=>{
     Axios.post('http://localhost:3001/api/insert', {
-      category: category_,
-      name: name_,
+      category: category,
+      name: name,
       time: time,
-      ipfsHash: ipfsHash_,
-      registrant: registrant_,
-      responsible: responsibleManager_,
-      filetype: fileType_,
-      filedes: fileDescription_
+      ipfsHash: ipfsHash,
+      registrant: registrant,
+      responsible: responsibleManager,
+      filetype: fileType,
+      filedes: fileDescription
     }).then(()=>{
       alert('등록 완료!');
     })
@@ -133,6 +134,7 @@ export default function App() {
   return (
     <div>
       <Login />
+      <Signup />
       <input type="text" placeholder="Type" onChange = {(event) => setCategory(event.target.value)}></input>
       <br></br>
       <input type="text" placeholder="Name" onChange = {(event) => setName(event.target.value)}></input>
